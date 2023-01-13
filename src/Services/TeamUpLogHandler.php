@@ -7,7 +7,7 @@ use Teamup\LogConnector\Actions\PushLog;
 use Monolog\Handler\AbstractProcessingHandler;
 use Teamup\LogConnector\Actions\ValidateConfigFields;
 
-class LogHandler extends AbstractProcessingHandler
+class TeamUpLogHandler extends AbstractProcessingHandler
 {
     public function __construct($level = Logger::DEBUG, bool $bubble = true)
     {

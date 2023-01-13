@@ -4,7 +4,7 @@ namespace Teamup\LogConnector\Services;
 
 use Monolog\Logger;
 
-class LogMonolog
+class TeamUpLogMonolog
 {
     /**
      * Create a custom Monolog instance.
@@ -15,7 +15,7 @@ class LogMonolog
     public function __invoke(array $config)
     {
         $logger = new Logger('teamup-log');
-        $logger->pushHandler(new LogHandler());
+        $logger->pushHandler(new TeamUpLogHandler());
 
         return $logger;
     }
