@@ -35,5 +35,5 @@ return [
     */
 
     'app_name' => env('APP_NAME'),
-    'app_stage' => env('ACCOUNTS_LOG_APP_STAGE', 'uat'),
+    'app_stage' => env('APP_STAGE', 'uat'),
 ];

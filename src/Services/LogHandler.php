@@ -3,7 +3,7 @@
 namespace Teamup\LogConnector\Services;
 
 use Monolog\Logger;
-use Monolog\LogRecord;
+use Teamup\LogConnector\Actions\PushLog;
 use Monolog\Handler\AbstractProcessingHandler;
 use Teamup\LogConnector\Actions\ValidateConfigFields;
 
@@ -18,10 +18,8 @@ class LogHandler extends AbstractProcessingHandler
     {
         if ($this->validateConfigs()) {
             $data = $this->mapRecordData($record);
-            (new CreateLog)($data);
+            (new PushLog)($data);
         }
-        // handle creation of log record on prd instance
-        // Log::channel('single')->info('LogHandler write!');
     }
 
     public function validateConfigs(): bool
@@ -30,20 +28,30 @@ class LogHandler extends AbstractProcessingHandler
         return $validation['status'];
     }
 
-    public function mapRecordData($record): array
+    public function mapRecordData($record): string
     {
-        $data = [
-            'streams' => [
-                'stream' => [
-                    'app' => config('teamup-logs.app_name'),
-                    'stage' => config('teamup-logs.app_stage'),
-                ],
-                'values' => [
-                    'log_message' => $record['formatted']
-                ]
-            ]
-        ];
+        $app_name = config('teamup-logs.app_name');
+        $app_stage = config('teamup-logs.app_stage');
+        $timestamp = $this->getNanosecondsTimestamp();
+        $type = $record['level_name'];
+        $log_message = $record['message'];
+        $content = $this->mapContext($record['context']);
 
+        $data = '{"streams": [{"stream": {"app": "' . $app_name . '","stage": "' . $app_stage . '" ,"type": "' . $type . '", "data": "' . $content . '" },"values": [[ "' . $timestamp . '", "' . $log_message . '" ]]}]}';
         return $data;
+    }
+
+    function getNanosecondsTimestamp()
+    {
+        return (int)(microtime(true) * 1e9);
+    }
+
+    function mapContext($data)
+    {
+        $finalString = '';
+        foreach ($data as $key => $value) {
+            $finalString.= ' '.$key.' : '.$value.' ';
+        }
+        return $finalString;
     }
 }

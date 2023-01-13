@@ -16,7 +16,6 @@ class LogMonolog
     {
         $logger = new Logger('teamup-log');
         $logger->pushHandler(new LogHandler());
-        $logger->pushProcessor(new LogProcessor());
 
         return $logger;
     }
