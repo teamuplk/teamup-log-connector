@@ -34,16 +34,29 @@ An auth.json file will need to be added to your project folder to handle the git
     }
 ```
 
-You can publish the config file with:
+## **Usage**
+You can publish the config file with the below command.You will need to make sure that your env file has the required fields
 
 ```bash
     php artisan vendor:publish --tag="log-connector"
 ```
 
-## **Usage**
+The following modifications need to be made to the config/logging.php file. As per your requirement you can either add the logging channel to a stack to be called in combination with your default channel or set the channel as your default.
 
-You can access the controller class from the below path
+The logging functionality will be as per the exiting functionality for laravel logs https://laravel.com/docs/9.x/logging
 
 ```bash
-    "use Teamup\LogConnector\Https\Controllers\LogController;",
+    use Teamup\LogConnector\Services\TeamUpLogMonolog;
+    use Teamup\LogConnector\Services\TeamUpLogHandler;
+    
+    'channels' => [
+        ... 
+
+        'teamup-log' => [
+            'driver'  => 'custom',
+            'via' => TeamUpLogMonolog::class,
+            'handler' => TeamUpLogHandler::class,
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
+    ]
 ```
