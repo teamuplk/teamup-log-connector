@@ -25,7 +25,7 @@ class LogsServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/teamup-logs.php' => $this->app->configPath('teamup-logs.php'),
+                __DIR__ . '/../config/teamup-logs.php' => $this->app->configPath('teamup-logs.php'),
             ], 'log-connector');
         }
     }

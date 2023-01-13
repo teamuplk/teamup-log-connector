@@ -47,4 +47,3 @@ class LogHandler extends AbstractProcessingHandler
         return $data;
     }
 }
-?>
