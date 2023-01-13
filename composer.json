@@ -1,0 +1,24 @@
+{
+    "name": "teamup/log-connector",
+    "type": "library",
+    "require": {
+        "php": "^7.3|^8.0",
+        "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Teamup\\LogConnector\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Teamup\\LogConnector\\LogsServiceProvider"
+            ],
+            "aliases": {
+                "LogConnector": "Teamup\\LogConnector"
+            }
+        }
+    },
+    "minimum-stability": "dev"
+}
