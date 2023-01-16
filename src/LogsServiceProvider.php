@@ -13,6 +13,20 @@ class LogsServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $this->registerPublishing();
+    }
+
+    /**
+     * Register the package's publishable resources.
+     *
+     * @return void
+     */
+    protected function registerPublishing()
+    {
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__ . '/../config/teamup-logs.php' => $this->app->configPath('teamup-logs.php'),
+            ], 'log-connector');
+        }
     }
 }
