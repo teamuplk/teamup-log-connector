@@ -9,28 +9,20 @@ class PushLog
      */
     public function __invoke($data)
     {
-        $url = config('teamup-logs.api_link');
-
-        $username = config('teamup-logs.username');
-        $password = config('teamup-logs.password');
-
-        $header = [];
-        $header[] = 'Content-Type: application/json';
-
-        $resource = curl_init($url);
-
-        $resource = curl_init();
-        curl_setopt($resource, CURLOPT_URL, $url);
-        curl_setopt($resource, CURLOPT_USERPWD, $username . ":" . $password);
-        curl_setopt($resource, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($resource, CURLOPT_POST, true);
-        curl_setopt($resource, CURLOPT_HTTPHEADER, $header);
-        curl_setopt($resource, CURLOPT_POSTFIELDS, $data);
-
-
-        $response = curl_exec($resource);
-        curl_close($resource);
-
-        return $response;
+        $useDefault = config('tup-logs.use_default');
+        $hostKey = $useDefault ? 'tup-logs.host' : 'queue.connections.rabbitmq.host';
+        $portKey = $useDefault ? 'tup-logs.port' : 'queue.connections.rabbitmq.port';
+        $usernameKey = $useDefault ? 'tup-logs.username' : 'queue.connections.rabbitmq.username';
+        $passwordKey = $useDefault ? 'tup-logs.password' : 'queue.connections.rabbitmq.password';
+        
+        $queueManager = app('queue');
+        $queue = $queueManager->connection('rabbitmq', [
+            'host' => config($hostKey),
+            'port' => config($portKey),
+            'username' => config($usernameKey),
+            'password' => config($passwordKey),
+            'queue' => 'logbugger',
+        ]);
+        $queue->pushRaw(json_encode($data), 'logbugger');
     }
 }

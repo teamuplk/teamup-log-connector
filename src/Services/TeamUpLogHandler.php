@@ -14,12 +14,15 @@ class TeamUpLogHandler extends AbstractProcessingHandler
         parent::__construct($level, $bubble);
     }
 
-    protected function write(array $record): void
+    protected function write(\Monolog\LogRecord $record): void
     {
         if ($this->validateConfigs()) {
             $data = $this->mapRecordData($record);
             (new PushLog)($data);
+            return;
         }
+
+        throw new \Exception('Invalid TUPLog Configs');
     }
 
     public function validateConfigs(): bool
@@ -28,16 +31,17 @@ class TeamUpLogHandler extends AbstractProcessingHandler
         return $validation['status'];
     }
 
-    public function mapRecordData($record): string
+    public function mapRecordData($record)
     {
-        $app_name = config('teamup-logs.app_name');
-        $app_stage = config('teamup-logs.app_stage');
-        $timestamp = $this->getNanosecondsTimestamp();
-        $type = $record['level_name'];
-        $log_message = $record['message'];
-        $content = $this->mapContext($record['context']);
+        $data = [
+            'app_name' => config('tup-logs.app_name'),
+            'app_stage' => config('tup-logs.app_stage'),
+            'timestamp' => $this->getNanosecondsTimestamp(),
+            'type' => $record['level_name'],
+            'log_message' => $record['message'],
+            'content' => $this->mapContext($record['context'])
+        ];
 
-        $data = '{"streams": [{"stream": {"app": "' . $app_name . '","stage": "' . $app_stage . '" ,"type": "' . $type . '", "data": "' . $content . '" },"values": [[ "' . $timestamp . '", "' . $log_message . '" ]]}]}';
         return $data;
     }
 

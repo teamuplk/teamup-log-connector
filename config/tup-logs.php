@@ -4,26 +4,28 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Centralized Log Links
+    | Use default rabbitmq
     |--------------------------------------------------------------------------
     |
-    | The api links to send the mapped logs.
+    | Use the default rabbitmq credentials or use custom rabbitmq endpoint
     |
     */
 
-    'api_link' => env('ACCOUNTS_LOG_API_LINK', 'https://logger-prd.dev.teamup.lk/loki/api/v1/push'),
+    'use_default' => env('LOG_USE_APP_RABBITMQ', true),
 
     /*
     |--------------------------------------------------------------------------
-    | Logging Credentials
+    | Logging Credentials for RabbitMQ
     |--------------------------------------------------------------------------
     |
     | The credentials to access the centralized logging 
     |
     */
 
-    'username' => env('ACCOUNTS_LOG_USERNAME'),
-    'password' => env('ACCOUNTS_LOG_PASSWORD'),
+    'host' => env('LOG_RABBITMQ_HOST', 'dev.rabbitmq.com'),
+    'port' => env('LOG_RABBITMQ_PORT', 5672),
+    'username' => env('LOG_RABBITMQ_USERNAME', ''),
+    'password' => env('LOG_RABBITMQ_PASSWORD', ''),
 
     /*
     |--------------------------------------------------------------------------
@@ -35,5 +37,5 @@ return [
     */
 
     'app_name' => env('APP_NAME'),
-    'app_stage' => env('APP_STAGE', 'uat'),
+    'app_stage' => env('APP_ENV'),
 ];

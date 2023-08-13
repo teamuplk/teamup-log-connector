@@ -1,7 +1,6 @@
 <?php
 
 namespace Teamup\LogConnector\Actions;
-
 class ValidateConfigFields
 {
     /**
@@ -9,36 +8,36 @@ class ValidateConfigFields
      */
     public function __invoke()
     {
-        $api_link = config('teamup-logs.api_link');
-        if (empty($api_link)) {
-            return [
-                'status' => false,
-                'message' => 'No Link Set'
-            ];
-        }
+        $use_default = config('tup-logs.use_default');
 
-        $username = config('teamup-logs.username');
-        if (empty($username)) {
-            return [
-                'status' => false,
-                'message' => 'No Username Set'
-            ];
-        }
+        if ($use_default == false) {
+            if (empty(config('tup-logs.host'))) {
+                return [
+                    'status' => false,
+                    'message' => 'No Host Set'
+                ];
+            }
 
-        $password = config('teamup-logs.password');
-        if (empty($password)) {
-            return [
-                'status' => false,
-                'message' => 'No Password Set'
-            ];
-        }
+            if (empty(config('tup-logs.port'))) {
+                return [
+                    'status' => false,
+                    'message' => 'No Port Set'
+                ];
+            }
 
-        $app_name = config('teamup-logs.app_name');
-        if (empty($app_name)) {
-            return [
-                'status' => false,
-                'message' => 'No App Name Set'
-            ];
+            if (empty(config('tup-logs.username'))) {
+                return [
+                    'status' => false,
+                    'message' => 'No Username Set'
+                ];
+            }
+
+            if (empty(config('tup-logs.password'))) {
+                return [
+                    'status' => false,
+                    'message' => 'No Password Set'
+                ];
+            }
         }
 
         return [
