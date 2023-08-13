@@ -16,19 +16,8 @@ class TeamUpLogHandler extends AbstractProcessingHandler
 
     protected function write(\Monolog\LogRecord $record): void
     {
-        if ($this->validateConfigs()) {
-            $data = $this->mapRecordData($record);
-            (new PushLog)($data);
-            return;
-        }
-
-        throw new \Exception('Invalid TUPLog Configs');
-    }
-
-    public function validateConfigs(): bool
-    {
-        $validation = (new ValidateConfigFields)();
-        return $validation['status'];
+        (new ValidateConfigFields)();
+        (new PushLog)($this->mapRecordData($record));
     }
 
     public function mapRecordData($record)
@@ -54,7 +43,7 @@ class TeamUpLogHandler extends AbstractProcessingHandler
     {
         $finalString = '';
         foreach ($data as $key => $value) {
-            $finalString.= ' '.$key.' : '.$value.' ';
+            $finalString .= ' ' . $key . ' : ' . $value . ' ';
         }
         return $finalString;
     }

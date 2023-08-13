@@ -41,22 +41,15 @@ You can publish the config file with the below command.You will need to make sur
     php artisan vendor:publish --tag="log-connector"
 ```
 
-The following modifications need to be made to the config/logging.php file. As per your requirement you can either add the logging channel to a stack to be called in combination with your default channel or set the channel as your default.
+The modifications need to be made to the config/logging.php file to include 'tup-log' channel. As per your requirement you can either add the logging channel to a stack to be called in combination with your default channel or set the channel as your default.
 
 The logging functionality will be as per the exiting functionality for laravel logs https://laravel.com/docs/9.x/logging
 
 ```bash
-    use Teamup\LogConnector\Services\TeamUpLogMonolog;
-    use Teamup\LogConnector\Services\TeamUpLogHandler;
-    
     'channels' => [
-        ... 
-
-        'teamup-log' => [
-            'driver'  => 'custom',
-            'via' => TeamUpLogMonolog::class,
-            'handler' => TeamUpLogHandler::class,
-            'level' => env('LOG_LEVEL', 'debug'),
+        'stack' => [
+            'driver' => 'stack',
+            'channels' => ['single', 'tup-log'],
+            'ignore_exceptions' => false,
         ],
-    ]
 ```
