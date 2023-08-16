@@ -2,6 +2,8 @@
 
 namespace Teamup\LogConnector\Actions;
 
+use Teamup\LogConnector\Jobs\SendLog;
+
 class PushLog
 {
     /**
@@ -14,7 +16,7 @@ class PushLog
         $portKey = $useDefault ? 'tup-logs.port' : 'queue.connections.rabbitmq.port';
         $usernameKey = $useDefault ? 'tup-logs.username' : 'queue.connections.rabbitmq.username';
         $passwordKey = $useDefault ? 'tup-logs.password' : 'queue.connections.rabbitmq.password';
-        
+
         $queueManager = app('queue');
         $queue = $queueManager->connection('rabbitmq', [
             'host' => config($hostKey),
@@ -23,6 +25,7 @@ class PushLog
             'password' => config($passwordKey),
             'queue' => 'logbugger',
         ]);
-        $queue->pushRaw(json_encode($data), 'logbugger');
+
+        $queue->pushOn('logbugger', new SendLog($data));
     }
 }

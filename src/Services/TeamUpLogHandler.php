@@ -23,11 +23,11 @@ class TeamUpLogHandler extends AbstractProcessingHandler
     public function mapRecordData($record)
     {
         $data = [
-            'app_name' => config('tup-logs.app_name'),
-            'app_stage' => config('tup-logs.app_stage'),
+            'appName' => config('tup-logs.app_name'),
+            'appStage' => config('tup-logs.app_stage'),
             'timestamp' => $this->getNanosecondsTimestamp(),
             'type' => $record['level_name'],
-            'log_message' => $record['message'],
+            'message' => $record['message'],
             'content' => $this->mapContext($record['context'])
         ];
 
